@@ -47,11 +47,29 @@ r.GET("/home",func(c *gin.Context){
 	password := sessions.GetSession(ctx, "password").Get()
 	login := sessions.GetSession(ctx, "session_id").Get(IsLoginStr)
 })
+r.Run()
 ```
 
 ### 内存版本
 
-```
+```go
+r := gin.Default()
+sessions.SetCookie(sessions.ValueMap, "session_id", age, "/", "127.0.0.1", false, false)
+sessions.SetCookie(sessions.ValueString, "password", age, "/", "127.0.0.1", false, false)
 
+r.Use(sessions.Sessions(sessions.ChooseSessionStore(sessions.Memory)))
+
+r.GET("/login",func(c *gin.Context){
+    sessions.GetSession(ctx, "password").Set(user.Password)
+    sessions.GetSession(ctx, "session_id").Set(true, IsLoginStr)
+    sessions.GetSession(ctx, "session_id").Set(user.Username, UsernameStr)
+    sessions.GetSession(ctx, "session_id").Set(user.Password, PasswordStr)
+})
+r.GET("/home",func(c *gin.Context){
+    username := sessions.GetSession(ctx, "session_id").Get(UsernameStr)
+	password := sessions.GetSession(ctx, "password").Get()
+	login := sessions.GetSession(ctx, "session_id").Get(IsLoginStr)
+})
+r.Run()
 
 ```
