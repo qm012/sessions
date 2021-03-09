@@ -1,4 +1,4 @@
-module sessions
+module github.com/qm012/sessions
 
 go 1.15
 
